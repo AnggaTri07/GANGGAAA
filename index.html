@@ -128,10 +128,13 @@
 
 </div>
 
-<audio id="bgMusic" loop preload="auto">
-  <!-- Letakkan file lagu dengan nama "Banda Neira - Sampai Jadi Debu.mp3" di folder yang sama dengan file HTML ini -->
-  <source src="Banda%20Neira%20-%20Sampai%20Jadi%20Debu.mp3" type="audio/mpeg">
+<div id="musicBar" style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,0.85);padding:8px 14px;border-radius:999px;font-family:sans-serif;font-size:13px;color:#333;box-shadow:0 2px 10px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;max-width:92vw;">
+  <span id="musicMsg">Memuat lagu...</span>
+  <audio id="bgMusic" controls loop preload="auto" style="height:32px;max-width:260px;">
+  <!-- Letakkan file lagu dengan nama "bandaneira.mp3" di folder yang sama dengan file HTML ini -->
+  <source src="bandaneira.mp3" type="audio/mpeg">
 </audio>
+</div>
 
 <script>
   // Siluet hati hitam yang melayang
@@ -151,9 +154,15 @@
   // Musik: coba autoplay saat halaman dibuka.
   // Jika browser memblokir, lagu mulai pada interaksi pertama.
   const audio = document.getElementById("bgMusic");
+  const msg = document.getElementById("musicMsg");
+  audio.addEventListener("canplay", () => { msg.textContent = "Lagu siap"; });
+  audio.addEventListener("error", () => {
+    msg.textContent = "Lagu tidak ditemukan. Pastikan nama file persis: bandaneira.mp3";
+  });
+  audio.addEventListener("playing", () => { msg.textContent = "Sedang diputar"; });
 
   function startMusic() {
-    return audio.play().then(() => true).catch(() => false);
+    return audio.play().then(() => true).catch(() => { msg.textContent = "Tekan ▶ untuk memutar lagu"; return false; });
   }
 
   startMusic().then((started) => {
